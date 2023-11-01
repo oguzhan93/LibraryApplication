@@ -91,6 +91,7 @@ public class MemberManager implements IMemberService{
 
         member.setBook(book);
         this.memberRepository.save(member);
+        this.bookService.changeIsTakenStatusTrue(bookId);
         return DataSuccessResult.of(member, "The Book Has Been Borrowed Successfully!");
 
     }
@@ -108,7 +109,7 @@ public class MemberManager implements IMemberService{
             return DataErrorResult.of(null, "This Member Does Not Have Any Books!");
         }
 
-
+        this.bookService.changeIsTakenStatusFalse(member.getBook().getId());
         member.setBook(null);
         this.memberRepository.save(member);
         return DataSuccessResult.of(member, "The Book Has Been Borrowed Successfully!");

@@ -14,5 +14,7 @@ public interface IBookService {
     DataResult<GetSingleBookResponse> getSingleBookById(long id);
     DataResult<UpdateBookRequest> updateBook(long id, UpdateBookRequest bookRequest);
     DataResult<Book> findBookToBorrow(long bookId);
+    DataResult<Book> changeIsTakenStatusTrue(long id);
+    DataResult<Book> changeIsTakenStatusFalse(long id);
 
 }

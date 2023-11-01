@@ -16,7 +16,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Service
-public class BookManager implements IBookService{
+public class BookManager implements IBookService {
 
     private final IBookRepository bookRepository;
     private final IModelMapperService modelMapperService;
@@ -75,10 +75,39 @@ public class BookManager implements IBookService{
         Book book = this.bookRepository.findById(bookId).orElse(null);
 
         if (book == null) {
-            return DataErrorResult.of(null, "Book Not Found");
+            return DataErrorResult.of(null, "Book Not Found!");
         }
 
         return DataSuccessResult.of(book);
+
+    }
+
+    @Override
+    public DataResult<Book> changeIsTakenStatusTrue(long id) {
+        Book book = this.bookRepository.findById(id).orElse(null);
+
+        if (book == null) {
+            return DataErrorResult.of(null, "Book Not Found!");
+        }
+
+        book.setTaken(true);
+        this.bookRepository.save(book);
+        return DataSuccessResult.of(book, "Current Book Status: Available");
+
+
+    }
+
+    public DataResult<Book> changeIsTakenStatusFalse(long id) {
+        Book book = this.bookRepository.findById(id).orElse(null);
+
+        if (book == null) {
+            return DataErrorResult.of(null, "Book Not Found!");
+        }
+
+        book.setTaken(false);
+        this.bookRepository.save(book);
+        return DataSuccessResult.of(book, "Current Book Status: Available");
+
 
     }
 
