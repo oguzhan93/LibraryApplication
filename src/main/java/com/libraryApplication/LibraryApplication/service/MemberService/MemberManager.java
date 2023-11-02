@@ -101,7 +101,7 @@ public class MemberManager implements IMemberService {
         member.setBook(book);
         this.memberRepository.save(member);
         this.bookService.changeIsTakenStatusTrue(bookId);
-        return DataSuccessResult.of("Borrowed Book: " + book.getName() + " The Member That Borrowed: " + member.getName(), "The Book Has Been Borrowed Successfully!");
+        return DataSuccessResult.of("Borrowed Book: " + book.getName() + ". The Member That Borrowed: " + member.getName() + ".", "The Book Has Been Borrowed Successfully!");
 
     }
 

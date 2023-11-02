@@ -84,9 +84,9 @@ public class MemberController {
         return ResponseEntity.badRequest().body(result);
     }
 
-    @PostMapping("/return-book/{bookId}")
-    public ResponseEntity<DataResult<String>> returnBook(@PathVariable long bookId) {
-        DataResult<String> result = this.memberService.returnBook(bookId);
+    @PostMapping("/return-book/{memberId}")
+    public ResponseEntity<DataResult<String>> returnBook(@PathVariable long memberId) {
+        DataResult<String> result = this.memberService.returnBook(memberId);
 
         if(result.isSuccess()) {
             return ResponseEntity.ok(result);
