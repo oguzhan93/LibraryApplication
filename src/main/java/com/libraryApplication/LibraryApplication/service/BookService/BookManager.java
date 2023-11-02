@@ -116,4 +116,20 @@ public class BookManager implements IBookService {
 
     }
 
+    @Override
+    public DataResult<List<GetBooksResponse>> getNonTakenBooks() {
+        List<Book> books = this.bookRepository.findNonTakenBooks();
+        List<GetBooksResponse> nonTakenBooks = books.stream().map(book -> this.modelMapperService.forResponse().map(book, GetBooksResponse.class)).toList();
+
+        return DataSuccessResult.of(nonTakenBooks, "Listed!");
+    }
+
+    @Override
+    public DataResult<List<GetBooksResponse>> getTakenBooks() {
+        List<Book> books = this.bookRepository.findTakenBooks();
+        List<GetBooksResponse> takenBooks = books.stream().map(book -> this.modelMapperService.forResponse().map(book, GetBooksResponse.class)).toList();
+
+        return DataSuccessResult.of(takenBooks, "Listed!");
+    }
+
 }

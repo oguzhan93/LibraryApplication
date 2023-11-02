@@ -30,13 +30,12 @@ public class MemberManager implements IMemberService {
         return DataSuccessResult.of(createMemberRequest, "The Member Has Been Created Successfully!");
     }
 
-
     public DataResult<DeleteMemberRequest> deleteMemberById(long id) {
         Member member = this.memberRepository.findById(id).orElse(null);
 
         if (member != null) {
 
-            if (member.getBook() == null) {
+            if (member.getBook() != null) {
                 return DataErrorResult.of(null, "The Member Cannot Be Deleted Because She/He Has a Borrowed Book!");
             }
 
@@ -48,13 +47,11 @@ public class MemberManager implements IMemberService {
         return DataErrorResult.of(null, "Not Found!");
     }
 
-
     public DataResult<List<GetMembersResponse>> getAllMembers() {
         List<Member> members = this.memberRepository.findAll();
         List<GetMembersResponse> membersResponse = members.stream().map(member -> this.modelMapperService.forResponse().map(member, GetMembersResponse.class)).toList();
         return DataSuccessResult.of(membersResponse, "The Members Have Been Listed Successfully!");
     }
-
 
     public DataResult<GetSingleMemberResponse> getSingleMemberById(long id) {
         Member member = this.memberRepository.findById(id).orElse(null);
@@ -66,7 +63,6 @@ public class MemberManager implements IMemberService {
 
         return DataErrorResult.of(null, "Not Found!");
     }
-
 
     public DataResult<UpdateMemberRequest> updateMember(long id, UpdateMemberRequest memberRequest) {
         Member member = this.memberRepository.findById(id).orElse(null);

@@ -38,7 +38,29 @@ public class BookController {
         return ResponseEntity.badRequest().body(result);
     }
 
-    @PostMapping("/add-new-book")
+    @GetMapping("/get-non-taken-book")
+    public ResponseEntity<DataResult<List<GetBooksResponse>>> getNonTakenBooks() {
+        DataResult<List<GetBooksResponse>> result = bookService.getNonTakenBooks();
+
+        if (result.isSuccess()) {
+            return ResponseEntity.ok(result);
+        }
+
+        return ResponseEntity.badRequest().body(result);
+    }
+
+    @GetMapping("/get-taken-books")
+    public ResponseEntity<DataResult<List<GetBooksResponse>>> getTakenBooks() {
+        DataResult<List<GetBooksResponse>> result = bookService.getTakenBooks();
+
+        if (result.isSuccess()) {
+            return ResponseEntity.ok(result);
+        }
+
+        return ResponseEntity.badRequest().body(result);
+    }
+
+    @PostMapping("/add-new-books")
     public ResponseEntity<DataResult<CreateBookRequest>> addNewBook(@RequestBody CreateBookRequest bookRequest) {
         DataResult<CreateBookRequest> result = bookService.createNewBook(bookRequest);
 
