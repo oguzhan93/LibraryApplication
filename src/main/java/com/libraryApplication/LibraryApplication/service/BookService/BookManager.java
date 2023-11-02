@@ -1,7 +1,6 @@
 package com.libraryApplication.LibraryApplication.service.BookService;
 
 import com.libraryApplication.LibraryApplication.model.Book;
-import com.libraryApplication.LibraryApplication.model.Member;
 import com.libraryApplication.LibraryApplication.repository.IBookRepository;
 import com.libraryApplication.LibraryApplication.service.BookService.dto.*;
 import com.libraryApplication.LibraryApplication.utilities.PatchUpdate;
@@ -33,10 +32,16 @@ public class BookManager implements IBookService {
         Book bookToBeDeleted = this.bookRepository.findById(id).orElse(null);
 
         if (bookToBeDeleted != null) {
+
+            if (bookToBeDeleted.isTaken()) {
+                return DataErrorResult.of(null, "The Book Cannot Be Deleted Because It is Already In Use.");
+            }
+
             this.bookRepository.delete(bookToBeDeleted);
             DeleteBookRequest bookRequest = this.modelMapperService.forRequest().map(bookToBeDeleted, DeleteBookRequest.class);
             return DataSuccessResult.of(bookRequest, "The Book Has Been Deleted Successfully!");
         }
+
 
         return DataErrorResult.of(null, "Not Found!");
     }

@@ -17,7 +17,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Service
-public class MemberManager implements IMemberService{
+public class MemberManager implements IMemberService {
 
     private final IModelMapperService modelMapperService;
     private final IMemberRepository memberRepository;
@@ -35,6 +35,11 @@ public class MemberManager implements IMemberService{
         Member member = this.memberRepository.findById(id).orElse(null);
 
         if (member != null) {
+
+            if (member.getBook() == null) {
+                return DataErrorResult.of(null, "The Member Cannot Be Deleted Because She/He Has a Borrowed Book!");
+            }
+
             this.memberRepository.delete(member);
             DeleteMemberRequest request = this.modelMapperService.forRequest().map(member, DeleteMemberRequest.class);
             return DataSuccessResult.of(request, "The Member Has Been Deleted Successfully");
@@ -77,31 +82,35 @@ public class MemberManager implements IMemberService{
     }
 
     @Override
-    public DataResult borrowBook(long memberId, long bookId) {
+    public DataResult<String> borrowBook(long memberId, long bookId) {
         Member member = this.memberRepository.findById(memberId).orElse(null);
         Book book = this.bookService.findBookToBorrow(bookId).getData();
 
         if (member == null) {
-            DataErrorResult.of(null, "Member Not Found!");
+            return DataErrorResult.of(null, "Member Not Found!");
         }
 
         if (member.getBook() != null) {
             return DataErrorResult.of(null, "This Member Already Has a Book!");
         }
 
+        if (book == null) {
+            return DataErrorResult.of(null, "Book Not Found!");
+        }
+
         member.setBook(book);
         this.memberRepository.save(member);
         this.bookService.changeIsTakenStatusTrue(bookId);
-        return DataSuccessResult.of(member, "The Book Has Been Borrowed Successfully!");
+        return DataSuccessResult.of("Borrowed Book: " + book.getName() + ". The Member That Borrowed: " + member.getName() + ".", "The Book Has Been Borrowed Successfully!");
 
     }
 
     @Override
-    public DataResult returnBook(long memberId) {
+    public DataResult<String> returnBook(long memberId) {
         Member member = this.memberRepository.findById(memberId).orElse(null);
 
         if (member == null) {
-            DataErrorResult.of(null, "Member Not Found!");
+            return DataErrorResult.of(null, "Member Not Found!");
         }
 
         Book book = member.getBook();
@@ -112,7 +121,7 @@ public class MemberManager implements IMemberService{
         this.bookService.changeIsTakenStatusFalse(member.getBook().getId());
         member.setBook(null);
         this.memberRepository.save(member);
-        return DataSuccessResult.of(member, "The Book Has Been Borrowed Successfully!");
+        return DataSuccessResult.of(null, "The Book Has Been Returned Successfully!");
     }
 
 }
