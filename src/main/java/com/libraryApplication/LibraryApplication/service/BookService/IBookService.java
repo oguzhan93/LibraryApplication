@@ -1,7 +1,6 @@
 package com.libraryApplication.LibraryApplication.service.BookService;
 
 import com.libraryApplication.LibraryApplication.model.Book;
-import com.libraryApplication.LibraryApplication.model.Member;
 import com.libraryApplication.LibraryApplication.service.BookService.dto.*;
 import com.libraryApplication.LibraryApplication.utilities.results.DataResult;
 
@@ -16,5 +15,7 @@ public interface IBookService {
     DataResult<Book> findBookToBorrow(long bookId);
     DataResult<Book> changeIsTakenStatusTrue(long id);
     DataResult<Book> changeIsTakenStatusFalse(long id);
+    DataResult<List<GetBooksResponse>> getNonTakenBooks();
+    DataResult<List<GetBooksResponse>> getTakenBooks();
 
 }
